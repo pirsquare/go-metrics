@@ -133,26 +133,6 @@ func (self *Reporter) BuildRequest(now time.Time, r metrics.Registry) (snapshot 
 			snapshot.Counters = append(snapshot.Counters, measurement)
 			snapshot.Gauges = append(snapshot.Gauges,
 				Measurement{
-					Name:   fmt.Sprintf("%s.%s", name, "1min"),
-					Value:  m.Rate1(),
-					Period: int64(self.Interval.Seconds()),
-					Attributes: map[string]interface{}{
-						DisplayUnitsLong:  Operations,
-						DisplayUnitsShort: OperationsShort,
-						DisplayMin:        "0",
-					},
-				},
-				Measurement{
-					Name:   fmt.Sprintf("%s.%s", name, "5min"),
-					Value:  m.Rate5(),
-					Period: int64(self.Interval.Seconds()),
-					Attributes: map[string]interface{}{
-						DisplayUnitsLong:  Operations,
-						DisplayUnitsShort: OperationsShort,
-						DisplayMin:        "0",
-					},
-				},
-				Measurement{
 					Name:   fmt.Sprintf("%s.%s", name, "15min"),
 					Value:  m.Rate15(),
 					Period: int64(self.Interval.Seconds()),
