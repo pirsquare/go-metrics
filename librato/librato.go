@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/rcrowley/go-metrics"
+	"github.com/pirsquare/go-metrics"
 )
 
 // a regexp for extracting the unit from time.Duration.String
@@ -116,6 +116,7 @@ func (self *Reporter) BuildRequest(now time.Time, r metrics.Registry) (snapshot 
 				measurement[Count] = uint64(s.Count())
 				measurement[Max] = float64(s.Max())
 				measurement[Min] = float64(s.Min())
+				measurement[Sum] = float64(s.Sum())
 				measurement[SumSquares] = sumSquares(s)
 				gauges[0] = measurement
 				for i, p := range self.Percentiles {
@@ -132,26 +133,6 @@ func (self *Reporter) BuildRequest(now time.Time, r metrics.Registry) (snapshot 
 			measurement[Value] = float64(m.Count())
 			snapshot.Counters = append(snapshot.Counters, measurement)
 			snapshot.Gauges = append(snapshot.Gauges,
-				Measurement{
-					Name:   fmt.Sprintf("%s.%s", name, "1min"),
-					Value:  m.Rate1(),
-					Period: int64(self.Interval.Seconds()),
-					Attributes: map[string]interface{}{
-						DisplayUnitsLong:  Operations,
-						DisplayUnitsShort: OperationsShort,
-						DisplayMin:        "0",
-					},
-				},
-				Measurement{
-					Name:   fmt.Sprintf("%s.%s", name, "5min"),
-					Value:  m.Rate5(),
-					Period: int64(self.Interval.Seconds()),
-					Attributes: map[string]interface{}{
-						DisplayUnitsLong:  Operations,
-						DisplayUnitsShort: OperationsShort,
-						DisplayMin:        "0",
-					},
-				},
 				Measurement{
 					Name:   fmt.Sprintf("%s.%s", name, "15min"),
 					Value:  m.Rate15(),
